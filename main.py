@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_socketio import SocketIO, join_room, emit
 
 app = Flask(__name__)
-socketio = SocketIO(app)  # Remove async_mode="gevent"
+socketio = SocketIO(app, async_mode="gevent")  # Set async_mode to "gevent" for Uvicorn
 rooms = {}  # Dictionary to store room information
 
 @app.route('/')
@@ -54,4 +54,4 @@ def handle_disconnect():
         emit('chat', {'message': 'A user has left the chat', 'name': 'System'}, room=code)
 
 if __name__ == '__main__':
-    socketio.run(app, host="0.0.0.0", port=5000)  # Use socketio.run instead of uvicorn.run
+    socketio.run(app, host="0.0.0.0", port=5000, debug=True, use_reloader=True)
